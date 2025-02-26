@@ -12,7 +12,7 @@ GITHUB_RAW_URL = "https://raw.githubusercontent.com/andresurbanoz7/contrato-cole
 
 def obtener_contrato():
     """Obtiene el contenido del contrato colectivo desde GitHub."""
-    response = requests.get(GITHUB_RAW_URL)
+    response = requests.get(https://raw.githubusercontent.com/andresurbanoz7/contrato-colectivo/main/contrato_colectivo.txt)
     if response.status_code == 200:
         return response.text
     else:
