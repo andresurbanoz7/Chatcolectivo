@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Laboral</title>
+    <script>
+        async function enviarPregunta() {
+            let pregunta = document.getElementById("pregunta").value;
+            if (!pregunta) return alert("Escribe una pregunta");
+
+            let respuesta = await fetch("https://tu-api-en-railway.app/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: pregunta })
+            });
+
+            let datos = await respuesta.json();
+            document.getElementById("respuesta").innerText = datos.response;
+        }
+    </script>
+</head>
+<body>
+    <h2>Chat sobre el Contrato Colectivo</h2>
+    <input type="text" id="pregunta" placeholder="Escribe tu pregunta">
+    <button onclick="enviarPregunta()">Enviar</button>
+    <p id="respuesta"></p>
+</body>
+</html>
