@@ -8,19 +8,18 @@ app = FastAPI()
 openai.api_key = "OPENAI_API_KEY"
 
 # URL del contrato colectivo en GitHub
-GITHUB_RAW_URL = "GITHUB_RAW_URL"
+GITHUB_RAW_URL = "https://raw.githubusercontent.com/andresurbanoz7/contrato-colectivo/main/contrato_colectivo.txt"
 
 def obtener_contrato():
     """Obtiene el contenido del contrato colectivo desde GitHub."""
-   import requests
+    respuesta = requests.get(GITHUB_RAW_URL)
 
-respuesta = requests.get("https://raw.githubusercontent.com/andresurbanoz7/contrato-colectivo/main/contrato_colectivo.txt")
-
-    if response.status_code == 200:
-        return response.text
+    if respuesta.status_code == 200:
+        return respuesta.text
     else:
         return "No se pudo obtener el contrato colectivo."
 
+# Cargar el contrato colectivo al iniciar
 CONTRATO_COLECTIVO = obtener_contrato()
 
 @app.post("/chat")
