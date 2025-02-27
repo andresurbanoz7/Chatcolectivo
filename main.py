@@ -9,7 +9,8 @@ from fastapi.responses import JSONResponse
 print("🚀 Iniciando API de Chat Colectivo...")
 
 # ✅ Obtener la API Key desde la variable de entorno correcta
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")  # Debe estar en Railway con este nombre
+OPENAI_API_KEY = os.getenv("chat-c")  # Usar la variable con el nombre correcto en Railway
+
 
 if not OPENAI_API_KEY:
     print("❌ ERROR: La clave de OpenAI no está configurada en Railway.")
