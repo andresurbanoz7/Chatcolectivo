@@ -26,7 +26,7 @@ async def chat_options():
     return JSONResponse({"message": "OK"}, status_code=200)
 
 # ✅ Verificar si la clave de OpenAI está presente
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+OPENAI_API_KEY = os.getenv("chat-c")
 if not OPENAI_API_KEY:
     print("❌ ERROR: La clave de OpenAI no está configurada en Railway.")
 else:
