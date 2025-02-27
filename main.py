@@ -8,8 +8,8 @@ from fastapi.responses import JSONResponse
 
 print("🚀 Iniciando API de Chat Colectivo...")
 
-# ✅ Obtener la API Key de la nueva variable en Railway
-OPENAI_API_KEY = os.getenv("chat-c")  # ← Se usa el nuevo nombre de la variable
+# ✅ Obtener la API Key desde la variable de entorno correcta
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")  # Debe estar en Railway con este nombre
 
 if not OPENAI_API_KEY:
     print("❌ ERROR: La clave de OpenAI no está configurada en Railway.")
@@ -24,9 +24,9 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Cambia "*" por los dominios permitidos si es necesario
+    allow_origins=["*"],  
     allow_credentials=True,
-    allow_methods=["*"],  # Permite GET, POST, OPTIONS, etc.
+    allow_methods=["*"],  
     allow_headers=["*"],
 )
 
@@ -72,5 +72,3 @@ if __name__ == "__main__":
     PORT = int(os.getenv("PORT", 8080))
     print(f"🚀 Iniciando servidor en el puerto {PORT}")
     uvicorn.run(app, host="0.0.0.0", port=PORT, workers=1)
-
-
