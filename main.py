@@ -55,7 +55,9 @@ async def chat_laboral(question: dict):
     if not user_question:
         raise HTTPException(status_code=400, detail="Debe incluir una pregunta.")
 
-   client = openai.OpenAI()  # Inicializa el cliente correctamente
+ import openai
+
+client = openai.OpenAI()  # 🔹 Asegúrate de inicializar correctamente el cliente
 
 response = client.chat.completions.create(
     model="gpt-4",
@@ -65,6 +67,7 @@ response = client.chat.completions.create(
     ],
     temperature=0.2
 )
+
 
 
     return {"response": response["choices"][0]["message"]["content"]}
