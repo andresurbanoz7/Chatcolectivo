@@ -9,7 +9,7 @@
             let pregunta = document.getElementById("pregunta").value;
             if (!pregunta) return alert("Escribe una pregunta");
 
-            let respuesta = await fetch("https://tu-api-en-railway.app/chat", {
+            let respuesta = await fetch("https://chatcolectivo-production.up.railway.app/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ message: pregunta })
