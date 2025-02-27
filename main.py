@@ -5,6 +5,22 @@ import requests
 from fastapi import FastAPI, HTTPException
 
 app = FastAPI()
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+
+# Configurar CORS para permitir solicitudes desde la PWA
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Cambia esto a los dominios específicos si es necesario
+    allow_credentials=True,
+    allow_methods=["*"],  # Permite todos los métodos (GET, POST, OPTIONS, etc.)
+    allow_headers=["*"],
+)
+
+# Permitir OPTIONS en /chat (solución al error 405)
+@app.options("/chat")
+async def chat_options():
+    return JSONResponse({"message": "OK"}, status_code=200)
 
 # Configura la clave de API de OpenAI
 openai.api_key = os.getenv("OPENAI_API_KEY")
