@@ -5,22 +5,6 @@ import requests
 from fastapi import FastAPI, HTTPException
 
 app = FastAPI()
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
-
-# Configurar CORS para permitir solicitudes desde la PWA
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Cambia esto a los dominios específicos si es necesario
-    allow_credentials=True,
-    allow_methods=["*"],  # Permite todos los métodos (GET, POST, OPTIONS, etc.)
-    allow_headers=["*"],
-)
-
-# Permitir OPTIONS en /chat (solución al error 405)
-@app.options("/chat")
-async def chat_options():
-    return JSONResponse({"message": "OK"}, status_code=200)
 
 # Configura la clave de API de OpenAI
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -42,11 +26,12 @@ def obtener_contrato():
 # Cargar el contrato colectivo al iniciar
 CONTRATO_COLECTIVO = obtener_contrato()
 
-# ✅ Ruta para la página principal (solución al error 404)
+# ✅ Ruta para la página principal
 @app.get("/")
 def home():
     return {"message": "API de Chat Colectivo está funcionando. Usa /chat para interactuar."}
 
+# ✅ Ruta del chat laboral
 @app.post("/chat")
 async def chat_laboral(question: dict):
     """Responde solo preguntas sobre el contrato colectivo."""
@@ -55,24 +40,22 @@ async def chat_laboral(question: dict):
     if not user_question:
         raise HTTPException(status_code=400, detail="Debe incluir una pregunta.")
 
- import openai
+    client = openai.OpenAI()  # 🔹 Asegúrate de inicializar correctamente el cliente
 
-client = openai.OpenAI()  # 🔹 Asegúrate de inicializar correctamente el cliente
+    response = client.chat.completions.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "Eres un asistente que solo responde preguntas relacionadas con el contrato colectivo."},
+            {"role": "user", "content": f"Contrato colectivo:\n\n{CONTRATO_COLECTIVO}\n\nPregunta: {user_question}"}
+        ],
+        temperature=0.2
+    )
 
-response = client.chat.completions.create(
-    model="gpt-4",
-    messages=[
-        {"role": "system", "content": "Eres un asistente que solo responde preguntas relacionadas con el contrato colectivo."},
-        {"role": "user", "content": f"Contrato colectivo:\n\n{CONTRATO_COLECTIVO}\n\nPregunta: {user_question}"}
-    ],
-    temperature=0.2
-)
+    return {"response": response.choices[0].message.content}
 
-
-
-    return {"response": response["choices"][0]["message"]["content"]}
-
+# ✅ Inicio del servidor en Railway
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 8080))  # Usa el puerto asignado por Railway
     print(f"🚀 Iniciando servidor en el puerto {port}")
     uvicorn.run(app, host="0.0.0.0", port=port, workers=1)
+
