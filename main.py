@@ -55,14 +55,17 @@ async def chat_laboral(question: dict):
     if not user_question:
         raise HTTPException(status_code=400, detail="Debe incluir una pregunta.")
 
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=[
-            {"role": "system", "content": "Eres un asistente que solo responde preguntas relacionadas con el contrato colectivo."},
-            {"role": "user", "content": f"Contrato colectivo:\n\n{CONTRATO_COLECTIVO}\n\nPregunta: {user_question}"}
-        ],
-        temperature=0.2
-    )
+   client = openai.OpenAI()  # Inicializa el cliente correctamente
+
+response = client.chat.completions.create(
+    model="gpt-4",
+    messages=[
+        {"role": "system", "content": "Eres un asistente que solo responde preguntas relacionadas con el contrato colectivo."},
+        {"role": "user", "content": f"Contrato colectivo:\n\n{CONTRATO_COLECTIVO}\n\nPregunta: {user_question}"}
+    ],
+    temperature=0.2
+)
+
 
     return {"response": response["choices"][0]["message"]["content"]}
 
