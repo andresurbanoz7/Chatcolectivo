@@ -26,6 +26,11 @@ def obtener_contrato():
 # Cargar el contrato colectivo al iniciar
 CONTRATO_COLECTIVO = obtener_contrato()
 
+# ✅ Ruta para la página principal (solución al error 404)
+@app.get("/")
+def home():
+    return {"message": "API de Chat Colectivo está funcionando. Usa /chat para interactuar."}
+
 @app.post("/chat")
 async def chat_laboral(question: dict):
     """Responde solo preguntas sobre el contrato colectivo."""
@@ -45,9 +50,7 @@ async def chat_laboral(question: dict):
 
     return {"response": response["choices"][0]["message"]["content"]}
 
-# Iniciar FastAPI con el puerto de Railway
 if __name__ == "__main__":
-    port = int(os.getenv("PORT", 8000))  # Usa el puerto asignado por Railway
+    port = int(os.getenv("PORT", 8080))  # Usa el puerto asignado por Railway
     print(f"🚀 Iniciando servidor en el puerto {port}")
-    uvicorn.run(app, host="0.0.0.0", port=port)
-
+    uvicorn.run(app, host="0.0.0.0", port=port, workers=1)
